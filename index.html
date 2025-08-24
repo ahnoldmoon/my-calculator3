@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧮 온라인 계산기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .calculator {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .calc-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+            width: 80px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #5a6fd8;
+        }
+        
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin: 15px 0;
+            min-height: 30px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .version {
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="version">버전 1.0 - 실제 배포됨! 🚀</div>
+        <h1>🧮 온라인 계산기</h1>
+        
+        <div class="calc-section">
+            <h3>➕ 더하기</h3>
+            <input type="number" id="add1" placeholder="첫 번째 수">
+            <span>+</span>
+            <input type="number" id="add2" placeholder="두 번째 수">
+            <button onclick="calculate('add')">계산</button>
+            <div class="result" id="addResult"></div>
+        </div>
+        
+        <div class="calc-section">
+            <h3>✖️ 곱하기</h3>
+            <input type="number" id="mul1" placeholder="첫 번째 수">
+            <span>×</span>
+            <input type="number" id="mul2" placeholder="두 번째 수">
+            <button onclick="calculate('mul')">계산</button>
+            <div class="result" id="mulResult"></div>
+        </div>
+        
+        <div class="calc-section">
+            <h3>➗ 나누기</h3>
+            <input type="number" id="div1" placeholder="첫 번째 수">
+            <span>÷</span>
+            <input type="number" id="div2" placeholder="두 번째 수">
+            <button onclick="calculate('div')">계산</button>
+            <div class="result" id="divResult"></div>
+        </div>
+        
+        <div class="footer">
+            <p>🎯 실제 배포된 웹사이트입니다!</p>
+            <p>📅 마지막 업데이트: <span id="updateTime"></span></p>
+            <p>🔄 GitHub Actions로 자동 배포됨</p>
+        </div>
+    </div>
+
+    <script>
+        // 현재 시간 표시
+        document.getElementById('updateTime').textContent = new Date().toLocaleString('ko-KR');
+        
+        function calculate(type) {
+            let result = '';
+            
+            try {
+                if (type === 'add') {
+                    const num1 = parseFloat(document.getElementById('add1').value);
+                    const num2 = parseFloat(document.getElementById('add2').value);
+                    
+                    if (isNaN(num1) || isNaN(num2)) {
+                        result = '숫자를 입력해주세요!';
+                    } else {
+                        result = `${num1} + ${num2} = ${num1 + num2}`;
+                    }
+                    document.getElementById('addResult').textContent = result;
+                    
+                } else if (type === 'mul') {
+                    const num1 = parseFloat(document.getElementById('mul1').value);
+                    const num2 = parseFloat(document.getElementById('mul2').value);
+                    
+                    if (isNaN(num1) || isNaN(num2)) {
+                        result = '숫자를 입력해주세요!';
+                    } else {
+                        result = `${num1} × ${num2} = ${num1 * num2}`;
+                    }
+                    document.getElementById('mulResult').textContent = result;
+                    
+                } else if (type === 'div') {
+                    const num1 = parseFloat(document.getElementById('div1').value);
+                    const num2 = parseFloat(document.getElementById('div2').value);
+                    
+                    if (isNaN(num1) || isNaN(num2)) {
+                        result = '숫자를 입력해주세요!';
+                    } else if (num2 === 0) {
+                        result = '0으로 나눌 수 없습니다!';
+                    } else {
+                        result = `${num1} ÷ ${num2} = ${(num1 / num2).toFixed(2)}`;
+                    }
+                    document.getElementById('divResult').textContent = result;
+                }
+            } catch (error) {
+                document.getElementById(type + 'Result').textContent = '계산 오류가 발생했습니다!';
+            }
+        }
+        
+        // 엔터키로 계산 가능하게
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const focused = document.activeElement;
+                if (focused.id.includes('add')) calculate('add');
+                else if (focused.id.includes('mul')) calculate('mul');  
+                else if (focused.id.includes('div')) calculate('div');
+            }
+        });
+    </script>
+</body>
+</html>

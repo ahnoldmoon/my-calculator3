@@ -1,0 +1,70 @@
+# .github/workflows/deploy.yml - 에러 수정 버전
+name: 실제 웹사이트 배포
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  # 1단계: 테스트
+  test:
+    name: 웹사이트 테스트
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 코드 가져오기
+      uses: actions/checkout@v4  # v3 → v4로 업데이트
+    
+    - name: 🧪 HTML 문법 검사
+      run: |
+        echo "HTML 파일이 존재하는지 확인..."
+        if [ -f "index.html" ]; then
+          echo "✅ index.html 파일 발견!"
+          if grep -q "<html" index.html && grep -q "</html>" index.html; then
+            echo "✅ HTML 구조 정상!"
+          else
+            echo "❌ HTML 구조에 문제가 있습니다!"
+            exit 1
+          fi
+        else
+          echo "❌ index.html 파일이 없습니다!"
+          exit 1
+        fi
+
+  # 2단계: 배포 (에러 수정됨!)
+  deploy:
+    name: 🚀 실제 웹사이트 배포
+    needs: test
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+    - name: 📥 코드 가져오기
+      uses: actions/checkout@v4  # 🔧 v3 → v4로 업데이트
+    
+    - name: 🔧 GitHub Pages 설정
+      uses: actions/configure-pages@v4  # 🔧 v3 → v4로 업데이트
+    
+    - name: 📦 웹사이트 파일 준비
+      uses: actions/upload-pages-artifact@v3  # 🔧 v2 → v3으로 업데이트
+      with:
+        path: '.'
+    
+    - name: 🌐 GitHub Pages에 실제 배포!
+      id: deployment
+      uses: actions/deploy-pages@v4  # 🔧 v2 → v4로 업데이트
+    
+    - name: 🎉 배포 완료 알림
+      run: |
+        echo "🎊 실제 웹사이트 배포 완료!"
+        echo "🌐 접속 주소: ${{ steps.deployment.outputs.page_url }}"
+        echo "📅 배포 시간: $(date)"
+        echo "✅ 이제 전세계 어디서든 접속할 수 있습니다!"
