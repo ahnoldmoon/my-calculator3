@@ -99,6 +99,15 @@
             <button onclick="calculate('add')">계산</button>
             <div class="result" id="addResult"></div>
         </div>
+
+        <div class="calc-section">
+            <h3>➖ 빼기</h3>
+            <input type="number" id="sub1" placeholder="첫 번째 수">
+            <span>-</span>
+            <input type="number" id="sub2" placeholder="두 번째 수">
+            <button onclick="calculate('sub')">계산</button>
+            <div class="result" id="subResult"></div>
+        </div>
         
         <div class="calc-section">
             <h3>✖️ 곱하기</h3>
@@ -143,6 +152,18 @@
                         result = `${num1} + ${num2} = ${num1 + num2}`;
                     }
                     document.getElementById('addResult').textContent = result;
+
+                }else if (type === 'sub') {
+                    const num1 = parseFloat(document.getElementById('sub1').value);
+                    const num2 = parseFloat(document.getElementById('sub2').value);
+                    
+                    if (isNaN(num1) || isNaN(num2)) {
+                        result = '숫자를 입력해주세요!';
+                    } else {
+                        result = `${num1} - ${num2} = ${num1 - num2}`;
+                    }
+                    document.getElementById('subResult').textContent = result;
+                
                     
                 } else if (type === 'mul') {
                     const num1 = parseFloat(document.getElementById('mul1').value);
